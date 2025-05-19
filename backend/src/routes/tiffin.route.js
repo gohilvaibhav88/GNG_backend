@@ -11,10 +11,13 @@ import { restrictTo } from '../middleware/roleMiddleware.js';
 
 const router = express.Router();
 
-router.post('/', protectRoute, restrictTo('owner'), addTiffin);
-router.get('/', protectRoute, getAllTiffins);
-router.get('/:id', protectRoute, getTiffinById);
-router.put('/:id', protectRoute, restrictTo('owner'), updateTiffin);
-router.delete('/:id', protectRoute, restrictTo('owner'), deleteTiffin);
+// Public routes - allow all users to view tiffins
+router.get('/getAllTiffins', getAllTiffins);
+router.get('/getTiffin/:id', getTiffinById);
+
+// Protected routes - only owners can manage tiffins
+router.post('/createTiffin', protectRoute, restrictTo('owner'), addTiffin);
+router.put('/updateTiffin/:id', protectRoute, restrictTo('owner'), updateTiffin);
+router.delete('/deleteTiffin/:id', protectRoute, restrictTo('owner'), deleteTiffin);
 
 export default router;

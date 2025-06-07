@@ -1,10 +1,20 @@
 import mongoose from 'mongoose';
 
-const menuSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
-  providerType: { type: String, enum: ['restaurant', 'tiffin'] },
-  providerId: { type: mongoose.Schema.Types.ObjectId }
-});
+const itemSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  description: { type: String },
+  availability: { type: Boolean, default: true }
+}, { _id: false }); // Prevent Mongoose from auto-generating _id for subdocuments
 
-export const MenuItem = mongoose.model('MenuItem', menuSchema);
+const canteenMenuSchema = new mongoose.Schema({
+  canteen: { type: mongoose.Schema.Types.ObjectId, ref: 'Canteen', required: true },
+  
+  lunch: [itemSchema],
+  chinese: [itemSchema],
+  breakfast: [itemSchema],
+  specialFood: [itemSchema]
+
+}, { timestamps: true });
+
+export default mongoose.model('CanteenMenu', canteenMenuSchema);

@@ -1,18 +1,14 @@
 import express from 'express';
-import {
-  addMenuItem,
-  getMenuByProvider,
-  updateMenuItem,
-  deleteMenuItem
-} from '../controllers/menu.controller.js';
+import { addMenuItem, updateMenuItem } from '../controllers/menu.controller.js';
 import { protectRoute } from '../middleware/protectRoute.js';
 import { restrictTo } from '../middleware/roleMiddleware.js';
 
 const router = express.Router();
 
-router.post('/', protectRoute, restrictTo('owner'), addMenuItem);
-router.get('/:providerId', protectRoute, getMenuByProvider);
-router.put('/:id', protectRoute, restrictTo('owner'), updateMenuItem);
-router.delete('/:id', protectRoute, restrictTo('owner'), deleteMenuItem);
+// Add a menu item to a specific category in a canteen
+router.post('/:canteenId', protectRoute, restrictTo('owner'), addMenuItem);
+
+// Update a menu item in a specific category by index
+router.put('/:canteenId/:category/:itemIndex', protectRoute, restrictTo('owner'), updateMenuItem);
 
 export default router;

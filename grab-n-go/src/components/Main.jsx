@@ -1,7 +1,5 @@
 import React from "react";
 
-
-// import CanteenSection from "./CanteenSection";
 import Menu from "./Menu";
 import Menu2 from "./Menu2";
 import Menu3 from "./Menu3";

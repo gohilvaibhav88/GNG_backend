@@ -1,32 +1,36 @@
-import React, { useState } from "react";
-import foodImage from "../Images/g4.png"; // Replace with your actual image path
+import React, { useState, useEffect } from "react";
+import foodImage from "../Images/g4.png";
 
-const menuItems = [
-  { name: "Pizza", description: "Mouth Watering Pizza" },
-  { name: "Veg Thali", description: "Delicious Veg Thali" },
-  { name: "Samosa", description: "Crispy & Tasty Samosa" },
-  { name: "Vada Pav", description: "Mumbai’s favorite snack" },
-  { name: "Poha", description: "Healthy & Light Breakfast" },
-];
+const Menu2 = ({ selectedCategory, menu, onAdd, onRemove }) => {
+  const [quantities, setQuantities] = useState({});
 
-const Menu2 = () => {
-  const [quantities, setQuantities] = useState(
-    menuItems.reduce((acc, item) => ({ ...acc, [item.name]: 0 }), {})
-  );
+  useEffect(() => {
+    if (menu && selectedCategory && Array.isArray(menu[selectedCategory])) {
+      const defaultQuantities = menu[selectedCategory].reduce(
+        (acc, item) => ({ ...acc, [item.name]: 0 }),
+        {}
+      );
+      setQuantities(defaultQuantities);
+    }
+  }, [selectedCategory, menu]);
 
-  const increaseQuantity = (item) => {
-    setQuantities((prev) => ({ ...prev, [item]: prev[item] + 1 }));
+  const handleAdd = (item) => {
+    setQuantities((prev) => ({ ...prev, [item.name]: (prev[item.name] || 0) + 1 }));
+    onAdd(item); // parent handler
   };
 
-  const decreaseQuantity = (item) => {
-    if (quantities[item] > 0) {
-      setQuantities((prev) => ({ ...prev, [item]: prev[item] - 1 }));
+  const handleRemove = (item) => {
+    if ((quantities[item.name] || 0) > 0) {
+      setQuantities((prev) => ({ ...prev, [item.name]: prev[item.name] - 1 }));
+      onRemove(item.name); // parent handler
     }
   };
 
+  if (!menu || !selectedCategory || !menu[selectedCategory]) return null;
+
   return (
     <div className="flex flex-col items-center gap-4 rounded-lg">
-      {menuItems.map((item, index) => (
+      {menu[selectedCategory].map((item, index) => (
         <div
           key={index}
           className="w-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 
@@ -36,25 +40,20 @@ const Menu2 = () => {
           <div>
             <p className="font-bold text-black text-2xl">{item.name}</p>
             <p className="text-gray-500 text-sm">{item.description}</p>
+            <p className="text-green-600 font-semibold">₹{item.price}</p>
             <div className="flex items-center mt-2">
-              {quantities[item.name] > 0 && (
-                <>
-                  <button
-                    className="bg-red-500 text-white rounded-full w-7 h-7 flex justify-center items-center 
-                               transition-transform active:scale-90"
-                    onClick={() => decreaseQuantity(item.name)}
-                  >
-                    -
-                  </button>
-                  <span className="mx-2 font-semibold">
-                    {quantities[item.name]}
-                  </span>
-                </>
-              )}
               <button
-                className="bg-green-500 text-white rounded-full w-7 h-7 flex justify-center items-center 
-                           transition-transform active:scale-90"
-                onClick={() => increaseQuantity(item.name)}
+                className="bg-red-500 text-white rounded-full w-7 h-7 flex justify-center items-center mr-2"
+                onClick={() => handleRemove(item)}
+              >
+                -
+              </button>
+              <span className="mx-2 font-semibold">
+                {quantities[item.name] || 0}
+              </span>
+              <button
+                className="bg-green-500 text-white rounded-full w-7 h-7 flex justify-center items-center"
+                onClick={() => handleAdd(item)}
               >
                 +
               </button>
@@ -73,3 +72,48 @@ const Menu2 = () => {
 };
 
 export default Menu2;
+
+
+// import React from "react";
+// import foodImage from "../Images/g4.png";
+
+// const Menu2 = ({ items, addToCart, removeFromCart }) => {
+//   return (
+//     <div className="flex flex-col items-center gap-4 rounded-lg">
+//       {items.map((item, index) => (
+//         <div
+//           key={index}
+//           className="w-full bg-white shadow-lg hover:shadow-xl rounded-lg p-4 flex justify-between items-center"
+//         >
+//           <div>
+//             <p className="font-bold text-black text-2xl">{item.name}</p>
+//             <p className="text-gray-500 text-sm">{item.description}</p>
+//             <p className="text-green-700 font-semibold">₹{item.price}</p>
+//             <div className="flex items-center mt-2">
+//               <button
+//                 className="bg-red-500 text-white rounded-full w-7 h-7 flex justify-center items-center"
+//                 onClick={() => removeFromCart(item.name)}
+//               >
+//                 -
+//               </button>
+//               <button
+//                 className="bg-green-500 text-white rounded-full w-7 h-7 flex justify-center items-center"
+//                 onClick={() => addToCart(item)}
+//               >
+//                 +
+//               </button>
+//             </div>
+//           </div>
+//           <img
+//             src={foodImage}
+//             alt={item.name}
+//             className="w-20 h-20 rounded-full object-cover"
+//           />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default Menu2;
+

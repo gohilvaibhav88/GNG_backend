@@ -6,8 +6,8 @@ export default function Second() {
   const navigate = useNavigate(); // React Router navigation hook
 
   const categories = [
-    { title: "Lunch Box Service", img: g9, path: "/alltiffin" }, // 👈 Updated path
-    { title: "College Canteens", img: g10, path: "/canteen" },
+    { title: "Lunch Box Service", img: g9, path: "/alltiffin" }, 
+    { title: "College Canteens", img: g10, path: "/canteens" },
     { title: "Best Mess", img: g9, path: "/all-restaurants" },
   ];
 
